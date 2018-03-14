@@ -1,7 +1,8 @@
 FROM centos
 MAINTAINER zzy
-RUN yum install -y vim net-tools
-ADD upload /bin/
+RUN mkdir /bin/upload
+COPY upload/* /bin/upload/
 ADD gotty /bin/
-ADD start.sh /bin/
+ADD centos7/start.sh /bin/
+RUN yum -y update && yum install -y vim net-tools
 CMD ["/bin/bash", "-c", "sh /bin/start.sh"]

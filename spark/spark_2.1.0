@@ -1,0 +1,26 @@
+FROM centos:7.3.1611
+
+MAINTAINER zzy
+
+COPY jdk1.8.0_151.rpm hadoop-2.7.4.tar.gz spark-2.1.0-bin-hadoop2.7.tgz /opt/
+
+RUN cd /opt && rpm -ivh jdk1.8.0_151.rpm && rm -f jdk1.8.0_151.rpm && echo java jdk 1.8.0 installed
+
+ENV JAVA_HOME /usr/java/jdk1.8.0_151
+
+RUN cd /opt && tar -xf hadoop-2.7.4.tar.gz hadoop-2.7.4/lib/native && mv hadoop-2.7.4 hadoop && rm -f hadoop-2.7.4.tar.gz && echo Hadoop 2.7.4 native library installed in /opt/hadoop/lib/native
+
+RUN cd /opt && tar -xf spark-2.1.0-bin-hadoop2.7.tgz && mv spark-2.1.0-bin-hadoop2.7 spark && rm -f spark-2.1.0-bin-hadoop2.7.tgz && mkdir -p /opt/spark/work && chmod 777 /opt/spark/work && echo spark 2.1.0 installed in /opt/spark
+
+ENV PATH $PATH:/opt/spark/bin 
+
+ADD log4j.properties /opt/spark/conf/log4j.properties
+ADD spark-defaults.conf /opt/spark/conf/spark-defaults.conf
+ADD gotty /bin/gotty
+COPY upload/* /bin/upload/
+RUN chmod 777 /bin/gotty
+RUN chmod -R 777 /opt/spark
+
+ADD start-master start-worker /
+RUN chmod 777 /start-master
+RUN chmod 777 /start-worker
