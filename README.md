@@ -1,3 +1,3 @@
 # Dockerfile
-docker image build
-move Makefile to root(Dockerfile) directory and excute make command
+### docker image build 
+move your Makefile to root(Dockerfile) directory and excute “make” command
