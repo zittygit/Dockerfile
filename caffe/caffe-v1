@@ -1,0 +1,10 @@
+FROM registry.docker-cn.com/bvlc/caffe:cpu
+MAINTAINER zzy
+RUN mkdir /bin/upload
+COPY upload/* /bin/upload/
+COPY caffe/run_mnist.sh caffe/mnist_solver.prototxt /workspace/
+COPY caffe/train-images-idx3-ubyte caffe/train-labels-idx1-ubyte caffe/t10k-images-idx3-ubyte caffe/t10k-labels-idx1-ubyte /opt/caffe/data/mnist/
+ADD gotty /bin/
+ADD caffe/start.sh /bin/
+RUN apt-get update && apt-get install -y vim
+CMD ["/bin/bash", "-c", "sh /bin/start.sh"]
