@@ -1,0 +1,25 @@
+FROM 172.18.232.157:5523/centos7
+
+MAINTAINER qiumy3@mail2.sysu.edu.cn
+
+RUN yum install -y deltarpm && yum install -y epel-release && yum install -y gcc python-devel python2-pip && pip install -i https://pypi.tuna.tsinghua.edu.cn/simple/ jupyter && python -m ipykernel.kernelspec
+
+RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple/ matplotlib
+
+# install pytorch
+
+COPY pytorch-cpu/torch-0.3.1-cp27-cp27mu-linux_x86_64.whl /opt/torch-0.3.1-cp27-cp27mu-linux_x86_64.whl
+COPY pytorch-cpu/torchvision-0.2.0-py2.py3-none-any.whl /opt/torchvision-0.2.0-py2.py3-none-any.whl
+
+RUN cd /opt && \
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple/ torch-0.3.1-cp27-cp27mu-linux_x86_64.whl && \
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple/ torchvision-0.2.0-py2.py3-none-any.whl
+
+RUN mkdir /nodebooks
+COPY pytorch-cpu/notebooks/* /notebooks/
+COPY gotty pytorch-cpu/pytorch.sh pytorch-cpu/config.json /
+
+RUN chmod 644 /config.json
+RUN chmod -R 777 /notebooks
+RUN chmod 777 /pytorch.sh
+CMD ["/bin/bash", "-c", "sh /pytorch.sh"]
