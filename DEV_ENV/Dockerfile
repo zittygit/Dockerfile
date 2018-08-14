@@ -1,16 +1,17 @@
 FROM centos:7
-
-MAINTAINER kitty <zhangzy65@sysu.mail2.edu.cn>  
+MAINTAINER kitty <zhangzy65@sysu.mail2.edu.cn>
+  
 ENV JDK_DOWNLOAD_LINK "http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm" 
 ENV IDEA_DOWNLOAD_LINK https://download.jetbrains.8686c.com/idea/ideaIC-2018.2.1-no-jdk.tar.gz
-#### install jdk
+#### install jdk and tools
 RUN yum -y update && \
  yum -y install wget && \
  wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=xxx; oraclelicense=accept-securebackup-cookie" "$JDK_DOWNLOAD_LINK" -O /tmp/jdk-8u181-linux-x64.rpm && \
  yum -y install /tmp/jdk-8u181-linux-x64.rpm && \
  rm -f /tmp/jdk-8u181-linux-x64.rpm && \
  #图形库
- yum install -y libXtst && \
+ yum install -y urw-fonts libXtst libXrender && \
+ yum install -y which && \
  yum clean all
 ENV JAVA_HOME /usr/java/latest
 
@@ -18,9 +19,8 @@ ENV JAVA_HOME /usr/java/latest
 RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=xxx; oraclelicense=accept-securebackup-cookie" "$IDEA_DOWNLOAD_LINK" -O /tmp/ideaIC-2018.2.1-no-jdk.tar.gz && \
     tar zxvf /tmp/ideaIC-2018.2.1-no-jdk.tar.gz -C /opt/ && \
 	rm -f /tmp/ideaIC-2018.2.1-no-jdk.tar.gz && \
+	sed -i "N;4 a alias idea='opt/idea-IC-182.3911.36/bin/idea.sh'" ~/.bashrc && \
 	yum clean all
-ENV IDEA_HOME /opt/ideaIC-2018.2.1-no-jdk/bin
-
 
 ### install X forwarding
 RUN yum install -y xorg-x11-xauth xorg-x11-fonts-* xorg-x11-font-utils xorg-x11-fonts-Type1 && \
