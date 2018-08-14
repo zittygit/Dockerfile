@@ -1,13 +1,37 @@
 FROM centos:7
 
 MAINTAINER kitty <zhangzy65@sysu.mail2.edu.cn>  
-ENV DOWNLOAD_LINK "http://download.oracle.com/otn-pub/java/jdk/10.0.2+13/19aef61b38124481863b1413dce1855f/jdk-10.0.2_linux-x64_bin.rpm"   
-
+ENV JDK_DOWNLOAD_LINK "http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm" 
+ENV IDEA_DOWNLOAD_LINK https://download.jetbrains.8686c.com/idea/ideaIC-2018.2.1-no-jdk.tar.gz
+#### install jdk
 RUN yum -y update && \
  yum -y install wget && \
- wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=xxx; oraclelicense=accept-securebackup-cookie" "$DOWNLOAD_LINK" -O /tmp/jdk-10.0.2_linux-x64_bin.rpm && \
- yum -y install /tmp/jdk-8-linux-x64.rpm && \
- rm -f /tmp/jdk-10.0.2_linux-x64_bin.rpm && \
+ wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=xxx; oraclelicense=accept-securebackup-cookie" "$JDK_DOWNLOAD_LINK" -O /tmp/jdk-8u181-linux-x64.rpm && \
+ yum -y install /tmp/jdk-8u181-linux-x64.rpm && \
+ rm -f /tmp/jdk-8u181-linux-x64.rpm && \
+ #图形库
+ yum install -y libXtst && \
  yum clean all
+ENV JAVA_HOME /usr/java/latest
 
- ENV JAVA_HOME /usr/java/latest
+#### install IDEA
+RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=xxx; oraclelicense=accept-securebackup-cookie" "$IDEA_DOWNLOAD_LINK" -O /tmp/ideaIC-2018.2.1-no-jdk.tar.gz && \
+    tar zxvf /tmp/ideaIC-2018.2.1-no-jdk.tar.gz -C /opt/ && \
+	rm -f /tmp/ideaIC-2018.2.1-no-jdk.tar.gz && \
+	yum clean all
+ENV IDEA_HOME /opt/ideaIC-2018.2.1-no-jdk/bin
+
+
+### install X forwarding
+RUN yum install -y xorg-x11-xauth xorg-x11-fonts-* xorg-x11-font-utils xorg-x11-fonts-Type1 && \
+    yum install -y openssh-server && \	
+	ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key && \
+	ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key && \
+	ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key && \
+	echo 'root:love' | chpasswd && \
+	sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+	sed -i 's/#X11UseLocalhost yes/X11UseLocalhost no/' /etc/ssh/sshd_config && \
+	sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd && \
+	echo "export VISIBLE=now" >> /etc/profile
+
+CMD ["/usr/sbin/sshd", "-D"]
