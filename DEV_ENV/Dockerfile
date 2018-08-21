@@ -26,7 +26,7 @@ RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=xxx; orac
 	yum clean all
 
 #### install Clion	
-RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=xxx; oraclelicense=accept-securebackup-cookie" "$IDEA_DOWNLOAD_LINK" -O /tmp/CLion-2018.2.1.tar.gz && \
+RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=xxx; oraclelicense=accept-securebackup-cookie" "$CLION_DOWNLOAD_LINK " -O /tmp/CLion-2018.2.1.tar.gz && \
     tar zxvf /tmp/CLion-2018.2.1.tar.gz -C /opt/ && \
 	rm -f /tmp/CLion-2018.2.1.tar.gz && \
 	sed -i "N;4 a alias clion='/opt/clion-2018.2.1/bin/clion.sh'" ~/.bashrc && \
