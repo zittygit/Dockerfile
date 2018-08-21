@@ -1,5 +1,5 @@
 FROM centos:7
-MAINTAINER kitty <zhangzy65@sysu.mail2.edu.cn>
+MAINTAINER zitty <zhangzy65@sysu.mail2.edu.cn>
   
 ENV JDK_DOWNLOAD_LINK "http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm" 
 ENV IDEA_DOWNLOAD_LINK https://download.jetbrains.8686c.com/idea/ideaIC-2018.2.1-no-jdk.tar.gz
@@ -8,7 +8,7 @@ ENV CLION_DOWNLOAD_LINK https://download.jetbrains.8686c.com/cpp/CLion-2018.2.1.
 #### install jdk and tools
 RUN yum -y update && \
  yum -y install wget && \
- yum group install "Development Tools" && \
+ yum -y group install "Development Tools" && \
  wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=xxx; oraclelicense=accept-securebackup-cookie" "$JDK_DOWNLOAD_LINK" -O /tmp/jdk-8u181-linux-x64.rpm && \
  yum -y install /tmp/jdk-8u181-linux-x64.rpm && \
  rm -f /tmp/jdk-8u181-linux-x64.rpm && \
