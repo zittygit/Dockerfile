@@ -1,0 +1,4 @@
+FROM ubuntu:14.04
+WORKDIR /root
+RUN apt-get update && apt-get install -y software-properties-common python-software-properties && add-apt-repository ppa:openjdk-r/ppa && apt-get update && apt-get install -y openssh-server openjdk-8-jdk wget && apt-get install -y vim
+
