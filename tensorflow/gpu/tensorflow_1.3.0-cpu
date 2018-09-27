@@ -10,6 +10,5 @@ RUN yum install -y epel-release && yum install -y gcc python-devel python2-pip &
 COPY notebooks /notebooks
 ADD gotty /bin/gotty
 COPY tensorflow.sh config.json /
-RUN chmod 644 /config.json &&\
-    chmod a+x /tensorflow.sh
-
+RUN chmod 644 /config.json && \
+    chmod a+x /tensorflow.sh /bin/gotty
